@@ -6,8 +6,8 @@ from pipe import Pipe
 pg.init()
 class Game:
     def __init__(self):
-        self.width = 800
-        self.height = 1021
+        self.width = 600
+        self.height = 770
         self.scale_factor=1.5
         self.win=pg.display.set_mode((self.width,self.height))
         self.clock=pg.time.Clock()
