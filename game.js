@@ -4,24 +4,46 @@ class Bird {
         this.imageIndex = 0;
         this.image = null;
         this.rect = { 
-            x: 100, 
-            y: 100, 
-            width: 0, 
-            height: 0,
-            get bottom() { return this.y + this.height; },
-            get left() { return this.x; },
-            get right() { return this.x + this.width; }
+            x:100, 
+            y:100, 
+            width:0, 
+            height:0,
+            get bottom() { 
+                return this.y+this.height; 
+            },
+            get left() { 
+                return this.x; 
+            },
+            get right() { 
+                return this.x + this.width; 
+            }
         };
-        this.yVelocity = 0;
-        this.gravity = 10;
-        this.flapSpeed = 250;
-        this.animCounter = 0;
-        this.updateOn = false;
-        this.scaleFactor = scaleFactor;
-        
+        this.yVelocity=0;
+        this.gravity=10;
+        this.flapSpeed=250;
+        this.animCounter=0;
+        this.updateOn=false;
+        this.scaleFactor=scaleFactor;
         this.loadImages();
     }
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     async loadImages() {
         const birdUpImg = new Image();
         const birdDownImg = new Image();
@@ -30,61 +52,87 @@ class Bird {
         birdDownImg.src = 'assets/birddown.png';
         
         await Promise.all([
-            new Promise(resolve => birdUpImg.onload = resolve),
-            new Promise(resolve => birdDownImg.onload = resolve)
+         new Promise(resolve=>birdUpImg.onload=resolve),
+         new Promise(resolve=>birdDownImg.onload=resolve)
         ]);
         
         this.imgList = [
             this.scaleImage(birdUpImg, this.scaleFactor),
             this.scaleImage(birdDownImg, this.scaleFactor)
         ];
-        
         this.image = this.imgList[this.imageIndex];
         this.rect.width = this.image.width;
         this.rect.height = this.image.height;
     }
+
+
+
+
+
+
+
+
+
+
+
+
     
     scaleImage(img, scaleFactor) {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = img.width * scaleFactor;
-        canvas.height = img.height * scaleFactor;
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const canvas=document.createElement('canvas');
+        const ctx=canvas.getContext('2d');
+        canvas.width=img.width*scaleFactor;
+        canvas.height=img.height*scaleFactor;
+        ctx.drawImage(img,0,0,canvas.width,canvas.height);
         return canvas;
     }
     
+
+
+
     update(dt) {
         if (this.updateOn) {
             this.playAnimation();
             this.applyGravity(dt);
         }
         
-        if (this.rect.y <= 0) {
-            this.rect.y = 0;
-            this.flapSpeed = 0;
-        } else if (this.rect.y > 0 && this.flapSpeed === 0) {
-            this.flapSpeed = 250;
+        if (this.rect.y<= 0) {
+            this.rect.y=0;
+            this.flapSpeed =0;
+        } else if (this.rect.y > 0 && this.flapSpeed===0) {
+            this.flapSpeed=250;
         }
     }
+
+
+
+
     
     applyGravity(dt) {
-        this.yVelocity += this.gravity * dt;
-        this.rect.y += this.yVelocity;
+        this.yVelocity+=this.gravity*dt;
+        this.rect.y+=this.yVelocity;
     }
     
+
+
     flap(dt) {
-        this.yVelocity = -this.flapSpeed * dt;
+        this.yVelocity=-this.flapSpeed*dt;
     }
     
     playAnimation() {
-        if (this.animCounter === 5) {
+        if (this.animCounter===5) {
             this.image = this.imgList[this.imageIndex];
-            this.imageIndex = this.imageIndex === 0 ? 1 : 0;
+            if(this.imageIndex===0){
+                this.imageIndex=1;
+            }else{
+                this.imageIndex=0;
+            }
             this.animCounter = 0;
         }
         this.animCounter++;
     }
     
+
+
     resetPosition() {
         this.rect.x = 100;
         this.rect.y = 100;
@@ -94,64 +142,82 @@ class Bird {
     
     draw(ctx) {
         if (this.image) {
-            ctx.drawImage(this.image, this.rect.x, this.rect.y);
+            ctx.drawImage(this.image,this.rect.x,this.rect.y);
         }
     }
 }
 
+
+
+
 class Pipe {
-    constructor(scaleFactor, moveSpeed) {
-        this.scaleFactor = scaleFactor;
-        this.moveSpeed = moveSpeed;
-        this.pipeDistance = 250;
-        this.imgUp = null;
-        this.imgDown = null;
+    constructor(scaleFactor,moveSpeed) {
+        this.scaleFactor=scaleFactor;
+        this.moveSpeed=moveSpeed;
+        this.pipeDistance=250;
+        this.imgUp=null;
+        this.imgDown=null;
         this.rectUp = { 
             x: 600, 
             y: 0, 
             width: 0, 
             height: 0,
-            get bottom() { return this.y + this.height; },
-            get left() { return this.x; },
-            get right() { return this.x + this.width; }
+            get bottom(){ 
+                return this.y+this.height; 
+            },
+
+
+            get left(){ 
+                return this.x;
+            },
+            get right(){ 
+                return this.x+this.width; 
+            }
         };
         this.rectDown = { 
             x: 600, 
             y: 0, 
             width: 0, 
             height: 0,
-            get bottom() { return this.y + this.height; },
-            get left() { return this.x; },
-            get right() { return this.x + this.width; }
+            get bottom(){ 
+                return this.y+this.height;
+             },
+
+            get left(){ 
+                return this.x; 
+            },
+            get right(){ 
+                return this.x + this.width;
+             }
         };
-        
         this.loadImages();
         this.randomizePosition();
     }
     
+
+
+
+
     async loadImages() {
         const pipeUpImg = new Image();
         const pipeDownImg = new Image();
-        
         pipeUpImg.src = 'assets/pipeup.png';
         pipeDownImg.src = 'assets/pipedown.png';
-        
-        await Promise.all([
-            new Promise(resolve => pipeUpImg.onload = resolve),
-            new Promise(resolve => pipeDownImg.onload = resolve)
-        ]);
-        
+        await Promise.all([new Promise(resolve=>pipeUpImg.onload=resolve),new Promise(resolve=>pipeDownImg.onload=resolve)]);
         this.imgUp = this.scaleImage(pipeUpImg, this.scaleFactor);
         this.imgDown = this.scaleImage(pipeDownImg, this.scaleFactor);
-        
         this.rectUp.width = this.imgUp.width;
         this.rectUp.height = this.imgUp.height;
         this.rectDown.width = this.imgDown.width;
         this.rectDown.height = this.imgDown.height;
-        
         this.randomizePosition();
     }
     
+
+
+
+
+
     scaleImage(img, scaleFactor) {
         const canvas = document.createElement('canvas');
         const ctx = canvas.getContext('2d');
@@ -161,17 +227,20 @@ class Pipe {
         return canvas;
     }
     
+
     randomizePosition() {
-        this.rectUp.y = Math.floor(Math.random() * (520 - 350 + 1)) + 350;
+        this.rectUp.y = Math.floor(Math.random()*(520-350+1))+350;
         this.rectUp.x = 600;
         this.rectDown.y = this.pipeDistance - this.rectUp.height;
         this.rectDown.x = 600;
     }
     
-    update(dt) {
-        this.rectUp.x -= Math.floor(this.moveSpeed * dt);
-        this.rectDown.x -= Math.floor(this.moveSpeed * dt);
-    }
+   update(dt){
+    this.rectUp.x-=this.moveSpeed*dt;
+    this.rectDown.x-=this.moveSpeed*dt;
+   }
+
+
     
     draw(ctx) {
         if (this.imgUp && this.imgDown) {
@@ -276,7 +345,6 @@ class Game {
                 this.bird.flap(1/60);
                 this.playSound('flapSound');
             }
-
         });
         const handleTouch = (e) => {
             if (e && e.preventDefault && !e.target.closest('#overlayRestart')) {
@@ -312,22 +380,33 @@ class Game {
 
    }
     
+
+
+
     gameLoop(currentTime) {
         const dt = (currentTime - this.lastTime) / 1000 || 1/60;
         this.lastTime = currentTime;
-        
         this.update(dt);
         this.checkCollisions();
         this.checkScore();
         this.draw();
-        
         requestAnimationFrame((time) => this.gameLoop(time));
+
+
+
+
+
     }
+
+
+
+
+
     
     update(dt) {
         if (this.isEnterPressed) {
-            this.ground1Rect.x -= this.moveSpeed * dt;
-            this.ground2Rect.x -= this.moveSpeed * dt;
+            this.ground1Rect.x-=this.moveSpeed*dt;
+            this.ground2Rect.x-= this.moveSpeed*dt;
             
             if (this.ground1Rect.x + this.ground1Rect.width < 0) {
                 this.ground1Rect.x = this.ground2Rect.x + this.ground2Rect.width;
@@ -354,6 +433,17 @@ class Game {
         
         this.bird.update(dt);
     }
+
+
+
+
+
+
+
+
+
+
+
     
     checkCollisions() {
         if (this.bird.rect.bottom > 568) {
@@ -374,31 +464,30 @@ class Game {
     }
     
     checkRectCollision(rect1, rect2) {
-        return rect1.x < rect2.x + rect2.width &&
-               rect1.x + rect1.width > rect2.x &&
-               rect1.y < rect2.y + rect2.height &&
-               rect1.y + rect1.height > rect2.y;
+        return rect1.x<rect2.x + rect2.width &&
+               rect1.x+rect1.width>rect2.x &&
+               rect1.y< rect2.y + rect2.height &&
+               rect1.y+rect1.height >rect2.y;
     }
     
     checkScore() {
-        if (this.pipes.length > 0) {
-            if (this.bird.rect.left > this.pipes[0].rectDown.left && 
-                this.bird.rect.right < this.pipes[0].rectDown.right && 
+        if (this.pipes.length > 0){
+            if (this.bird.rect.left>this.pipes[0].rectDown.left && 
+                this.bird.rect.right<this.pipes[0].rectDown.right && 
                 !this.startMonitoring) {
-                this.startMonitoring = true;
+                this.startMonitoring=true;
             }
-            if (this.bird.rect.left > this.pipes[0].rectDown.right && this.startMonitoring) {
-                this.startMonitoring = false;
+            if (this.bird.rect.left>this.pipes[0].rectDown.right && this.startMonitoring) {
+                this.startMonitoring=false;
                 this.score++;
-                this.scoreElement.textContent = `Score: ${this.score}`;
+                this.scoreElement.textContent=`Score: ${this.score}`;
                 this.playSound('scoreSound');
             }
         }
     }
     
     draw() {
-        this.ctx.clearRect(0, 0, this.width, this.height);
-        
+        this.ctx.clearRect(0,0,this.width,this.height);
         if (this.bgImage) {
             this.ctx.drawImage(this.bgImage, 0, -300);
         }
@@ -416,8 +505,11 @@ class Game {
         
         this.bird.draw(this.ctx);
     }
+
+
+
     
-    restartGame() {
+    restartGame(){
         this.score = 0;
         this.scoreElement.textContent = 'Score: 0';
         this.isEnterPressed = false;
@@ -432,7 +524,7 @@ class Game {
         this.gameOverOverlay.classList.remove('show');
     }
     
-    gameOver() {
+    gameOver(){
         if (this.isGameOver) {
             return;
         }
@@ -441,9 +533,12 @@ class Game {
         this.isGameStarted = false;
         this.isEnterPressed = false;
         this.playSound('deadSound');
-        this.finalScoreElement.textContent = `Score: ${this.score}`;
+        this.finalScoreElement.textContent=`Score: ${this.score}`;
         this.gameOverOverlay.classList.add('show');
     }
+
+
+
     
     playSound(soundId) {
         const sound = document.getElementById(soundId);
