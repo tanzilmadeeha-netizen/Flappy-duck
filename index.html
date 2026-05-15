@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Duckie Game - Web Version</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <canvas id="gameCanvas" width="600" height="770"></canvas>
+        <div class="game-ui">
+            <div id="score" class="score">Score: 0</div>
+                        <div id="instructions" class="instructions">
+                Press ENTER to start<br>
+                Press SPACE to flap
+            </div>
+            <div id="gameOverOverlay" class="game-over-overlay">
+                <div class="game-over-text">Game Over!</div>
+                <div id="finalScore" class="final-score">Score: 0</div>
+                <button id="overlayRestart" class="restart-button">Play Again</button>
+            </div>
+        </div>
+    </div>
+    <audio id="flapSound" preload="auto">
+        <source src="assets/sfx/flap.wav" type="audio/wav">
+    </audio>
+    <audio id="scoreSound" preload="auto">
+        <source src="assets/sfx/score.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="deadSound" preload="auto">
+        <source src="assets/sfx/dead.wav" type="audio/wav">
+    </audio>
+    <script src="game.js"></script>
+</body>
+</html>
